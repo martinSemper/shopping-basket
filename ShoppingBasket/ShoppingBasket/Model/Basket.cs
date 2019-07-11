@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ShoppingBasket.Logger;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,10 +11,12 @@ namespace ShoppingBasket.Model
         readonly List<BasketItem> _basketItems = new List<BasketItem>();
         readonly PriceCalculator _priceCalculator = new PriceCalculator();
         readonly DiscountApplicator _discountApplicator;
+        readonly ILogger _logger;
 
-        public Basket(IEnumerable<Discount> discounts)
+        public Basket(IEnumerable<Discount> discounts, ILogger logger)
         {
             _discountApplicator = new DiscountApplicator(discounts);
+            _logger = logger;
         }
 
         public decimal Total { get; internal set; }
@@ -44,6 +47,8 @@ namespace ShoppingBasket.Model
         {
             _discountApplicator.ApplyDiscounts(this);
             _priceCalculator.VisitBasket(this);
+
+            _logger.LogBasket(this);
         }
     }
 }

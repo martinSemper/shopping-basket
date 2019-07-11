@@ -23,7 +23,7 @@ namespace ShoppingBasket.Tests
         [Test]
         public void TresholdNotReachedNoDiscount()
         {
-            Basket basket = new Basket(_discounts);
+            Basket basket = new Basket(_discounts, new DummyLogger());
 
             basket.AddItem(_butter, 1);
             basket.AddItem(_bread, 1);
@@ -37,7 +37,7 @@ namespace ShoppingBasket.Tests
         [Test]
         public void TwoButersTwoBreadsOneBread50PercentOff()
         {
-            Basket basket = new Basket(_discounts);
+            Basket basket = new Basket(_discounts, new DummyLogger());
 
             basket.AddItem(_butter, 2);
             basket.AddItem(_bread, 2);
@@ -50,7 +50,7 @@ namespace ShoppingBasket.Tests
         [Test]
         public void ThreeButersTwoBreadsOneBread50PercentOff()
         {
-            Basket basket = new Basket(_discounts);
+            Basket basket = new Basket(_discounts, new DummyLogger());
 
             basket.AddItem(_butter, 3);
             basket.AddItem(_bread, 2);
@@ -63,7 +63,7 @@ namespace ShoppingBasket.Tests
         [Test]
         public void FourMilksOneMilkFree()
         {
-            Basket basket = new Basket(_discounts);
+            Basket basket = new Basket(_discounts, new DummyLogger());
 
             basket.AddItem(_milk, 4);
 
@@ -75,7 +75,7 @@ namespace ShoppingBasket.Tests
         [Test]
         public void TwoButtersEightMilksTriggerThreeDiscounts()
         {
-            Basket basket = new Basket(_discounts);
+            Basket basket = new Basket(_discounts, new DummyLogger());
 
             basket.AddItem(_butter, 2);
             basket.AddItem(_bread, 1);
@@ -89,7 +89,7 @@ namespace ShoppingBasket.Tests
         [Test]
         public void TwoDiscountsBothModifyOneTarget()
         {
-            Basket basket = new Basket(_discounts);
+            Basket basket = new Basket(_discounts, new DummyLogger());
 
             // bread triggers once, milk triggers two times
             basket.AddItem(_bread, 7);
