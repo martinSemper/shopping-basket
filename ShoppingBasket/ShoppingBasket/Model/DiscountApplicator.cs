@@ -12,6 +12,9 @@ namespace ShoppingBasket.Model
         public DiscountApplicator(IEnumerable<Discount> discounts)
         {
             _discounts = discounts;
+
+            if (_discounts.Select(d => d.TargetId).Distinct().Count() != _discounts.Count())
+                throw new DiscountPolicyException("Each product may be targeted by only one discount at a time.");
         }
         
         public void ApplyDiscounts(Basket basket)

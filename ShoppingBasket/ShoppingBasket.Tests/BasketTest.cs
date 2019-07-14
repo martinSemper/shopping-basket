@@ -21,6 +21,17 @@ namespace ShoppingBasket.Tests
         }
 
         [Test]
+        public void BasketInstantiationTwoDiscountsSameTargetThrows()
+        {
+            var discount1 = new Discount() { TriggerId = 1, TargetId = 2 };
+            var discount2 = new Discount() { TriggerId = 2, TargetId = 2 };
+
+            var discounts = new Discount[] { discount1, discount2 };
+
+            Assert.Throws<DiscountPolicyException>(() => new Basket(discounts, null));
+        }
+
+        [Test]
         public void TresholdNotReachedNoDiscount()
         {
             Basket basket = new Basket(_discounts, new DummyLogger());
@@ -84,22 +95,26 @@ namespace ShoppingBasket.Tests
             basket.RefreshTotal();
 
             Assert.AreEqual(9m, basket.Total);
-        }
+        }        
 
         [Test]
-        public void TwoDiscountsBothModifyOneTarget()
+        public void RefreshTotalCalledTwiceYieldsSameResult()
         {
             Basket basket = new Basket(_discounts, new DummyLogger());
 
-            // bread triggers once, milk triggers two times
-            basket.AddItem(_bread, 7);
-            basket.AddItem(_milk, 10);
+            basket.AddItem(_butter, 2);
+            basket.AddItem(_bread, 1);
+            basket.AddItem(_milk, 8);
 
             basket.RefreshTotal();
 
-            Assert.AreEqual(15.05m, basket.Total);
-        }
+            Assert.AreEqual(9m, basket.Total);
 
+            basket.RefreshTotal();
+
+            Assert.AreEqual(9m, basket.Total);
+        }
+        
         private void CreateDiscounts()
         {
             var twoButtersOneBread50percent = new Discount()
@@ -116,19 +131,10 @@ namespace ShoppingBasket.Tests
                 TriggerStep = 4,
                 TriggerId = 3,
                 TargetId = 3
-            };
-
-            var fiveBreadsOneMilkFree = new Discount()
-            {
-                DiscountRate = 1m,
-                TriggerStep = 5,
-                TriggerId = 2,
-                TargetId = 3
-            };
+            };                       
 
             _discounts.Add(twoButtersOneBread50percent);
             _discounts.Add(threeMilksFourthMilkFree);
-            _discounts.Add(fiveBreadsOneMilkFree);
         }
     }
 }

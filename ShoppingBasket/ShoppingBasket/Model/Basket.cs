@@ -11,6 +11,7 @@ namespace ShoppingBasket.Model
         readonly List<BasketItem> _basketItems = new List<BasketItem>();
         readonly PriceCalculator _priceCalculator = new PriceCalculator();
         readonly DiscountApplicator _discountApplicator;
+        readonly DiscountRemover _discountRemover = new DiscountRemover();
         readonly ILogger _logger;
 
         public Basket(IEnumerable<Discount> discounts, ILogger logger)
@@ -45,10 +46,13 @@ namespace ShoppingBasket.Model
         
         public void RefreshTotal()
         {
+            // reset 
+            _discountRemover.VisitBasket(this);
+
             _discountApplicator.ApplyDiscounts(this);
             _priceCalculator.VisitBasket(this);
 
-            _logger.LogBasket(this);
+            _logger?.LogBasket(this);
         }
     }
 }

@@ -10,6 +10,7 @@ namespace ShoppingBasket.Model
         {
             base.VisitBasket(basket);
 
+            basket.Total = 0;
             foreach(var item in basket.Items)
             {
                 basket.Total += item.TotalPrice;
